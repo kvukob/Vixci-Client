@@ -1,0 +1,7 @@
+@use "~vuetify/lib/styles/main.sass" with (
+  $body-font-family: "Simvoni",
+);
+@font-face {
+  font-family: "Simvoni";
+  src: url("assets/fonts/Simvoni.ttf") format("truetype");
+}
