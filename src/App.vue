@@ -1,6 +1,5 @@
 <template>
   <v-app>
-    <VXAppBar />
     <v-main>
       <!-- Provides the application the proper gutter -->
       <v-container fluid style="height: calc(100vh - 64px)">
@@ -33,8 +32,7 @@ nav {
 }
 </style>
 <script>
-import VXAppBar from "@/core/ui/VXAppBar";
 export default {
-  components: { VXAppBar },
+  components: {},
 };
 </script>

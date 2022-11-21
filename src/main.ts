@@ -34,9 +34,15 @@ const vuetify = createVuetify({
     },
   },
   defaults: {
+    VCard: {
+      flat: "true",
+    },
     VTextField: {
       density: "compact",
       variant: "outlined",
+    },
+    VBtn: {
+      variant: "tonal",
     },
   },
 });

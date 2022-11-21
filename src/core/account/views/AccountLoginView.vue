@@ -21,12 +21,23 @@
           v-model="form.user.password"
         />
         <v-divider thickness="0" class="mt-4" />
+        <v-alert
+          color="error"
+          variant="outlined"
+          v-if="form.errorMsg"
+          class="mb-5 mt-5"
+        >
+          <template v-slot:prepend>
+            <v-icon>mdi-exclamation</v-icon>
+          </template>
+          {{ form.errorMsg }}
+        </v-alert>
         <v-btn block color="primary" variant="tonal" @click="login">
           Login
         </v-btn>
       </v-form>
       <v-divider class="ma-5" />
-      <v-btn block variant="text" class="text-subtitle-2" to="signup">
+      <v-btn block variant="text" class="text-subtitle-2" to="sign-up">
         Need an account? Sign up!
       </v-btn>
       <v-btn block variant="plain" class="text-subtitle-2">
@@ -39,16 +50,19 @@
 <script>
 import fetcher from "@/util/fetcher";
 import routes from "@/util/fetcher/routes";
+import { useAccountStore } from "@/core/account/store";
 
 export default {
   name: "AccountLoginView",
 
   data: () => ({
+    accountStore: useAccountStore(),
     form: {
       user: {
         email: "",
         password: "",
       },
+      errorMsg: "",
       validForm: false,
     },
   }),
@@ -60,7 +74,13 @@ export default {
         password: this.form.user.password,
       };
       let response = await fetcher.postData(routes.account.login, request);
-      console.log(response);
+      if (response.success) {
+        this.accountStore.setIsLoggedIn(true);
+        this.accountStore.setToken(response.data.token);
+        await this.$router.push("/app");
+      } else if (!response.success) {
+        this.form.errorMsg = response.message;
+      }
     },
   },
 };

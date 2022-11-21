@@ -3,22 +3,30 @@
 const SERVERURL = `https://localhost:7288/api/`;
 //const SERVERURL = `/api/`;
 
-const getData = async function (apiCall) {
-  let payload = {};
-  let headers = buildHeaders();
+interface ApiResponse {
+  success: boolean;
+  message: string;
+  data: object;
+}
+
+const getData = async function (apiCall: string) {
+  let payload = <ApiResponse>{};
+  const headers = buildHeaders();
   try {
-    let response = await fetch(`${SERVERURL}${apiCall}`, {
+    const response = await fetch(`${SERVERURL}${apiCall}`, {
       method: "GET",
       headers: headers,
     });
     payload = await response.json();
-  } catch (err) {
-    payload = err;
+  } catch (err: *) {
+    if (typeof err === "string") {
+      payload.message = err;
+    }
   }
   return payload;
 };
 
-const postData = async function (apiCall, data) {
+const postData = async function (apiCall: string, data: object) {
   let payload = JSON.stringify(data);
   let headers = {};
   if (apiCall === "register" || apiCall === "login") {
@@ -27,24 +35,26 @@ const postData = async function (apiCall, data) {
     headers = buildHeaders();
   }
   try {
-    let response = await fetch(`${SERVERURL}${apiCall}`, {
+    const response = await fetch(`${SERVERURL}${apiCall}`, {
       method: "POST",
       headers: headers,
       body: payload,
     });
     payload = await response.json();
-  } catch (error) {
-    payload = error;
+  } catch (error: *) {
+    if (typeof error === "string") {
+      payload = error;
+    }
   }
   return payload;
 };
 
 const buildHeaders = function () {
   //const accountStore = useAccountStore();
-  let myHeaders = new Headers();
+  const myHeaders = new Headers();
   //let token = accountStore.getToken;
   //let token = accountStore.getToken;
-  let token = "";
+  const token = "";
   myHeaders.append("Content-Type", "application/json");
   myHeaders.append("Authorization", "Bearer " + token);
   return myHeaders;
